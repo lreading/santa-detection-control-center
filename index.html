@@ -1005,6 +1005,90 @@
         }
       }
 
+      .access-denied-overlay {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 95%;
+        max-width: 95%;
+        padding: 40px 20px;
+
+        /* layered cyberpunk-y background */
+        background:
+          radial-gradient(circle at 50% 50%,
+            rgba(255, 80, 96, 0.55) 0%,
+            rgba(120, 0, 16, 0.96) 55%,
+            rgba(30, 0, 6, 1) 100%
+          ),
+          repeating-linear-gradient(
+            -45deg,
+            rgba(255, 160, 160, 0.22) 0px,
+            rgba(255, 160, 160, 0.22) 4px,
+            rgba(0, 0, 0, 0.0) 4px,
+            rgba(0, 0, 0, 0.0) 8px
+          );
+
+        color: #ffffff;
+        text-align: center;
+        font-size: 32px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+
+        border: 2px solid rgba(255, 255, 255, 0.85);
+        box-shadow:
+          0 0 18px rgba(255, 80, 96, 0.9),
+          0 0 40px rgba(255, 0, 40, 0.9),
+          inset 0 0 16px rgba(0, 0, 0, 0.55);
+
+        text-shadow:
+          0 0 6px rgba(255, 255, 255, 0.9),
+          0 0 14px rgba(255, 120, 140, 0.9);
+
+        z-index: 10000;
+        opacity: 0;
+        pointer-events: none;
+        border-radius: 0;
+      }
+
+      .access-denied-overlay.show {
+        animation: accessDeniedFlash 3s ease-in-out;
+      }
+
+      @keyframes accessDeniedFlash {
+        0% {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(0.9);
+        }
+        8% {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1);
+        }
+        20% {
+          opacity: 0.7;
+        }
+        30% {
+          opacity: 1;
+        }
+        45% {
+          opacity: 0.7;
+        }
+        55% {
+          opacity: 1;
+        }
+        70% {
+          opacity: 0.7;
+        }
+        80% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(0.95);
+        }
+      }
+
       .password-footer {
         font-size: 9px;
         color: var(--green-soft);
@@ -1255,6 +1339,9 @@
     </div>
     <!-- /app -->
 
+    <!-- Access Denied Overlay -->
+    <div id="access-denied-overlay" class="access-denied-overlay">ACCESS DENIED</div>
+
     <!-- =========================
        JAVASCRIPT
        ========================= -->
@@ -1278,6 +1365,7 @@
 
       const passwordDisplayEl = document.getElementById('password-display');
       const passwordMessageEl = document.getElementById('password-message');
+      const accessDeniedOverlay = document.getElementById('access-denied-overlay');
 
       /* State */
       let armed = false;
@@ -1421,10 +1509,21 @@
         passwordMessageEl.classList.toggle('password-message-danger', err);
       }
 
+      function showAccessDeniedOverlay() {
+        accessDeniedOverlay.classList.remove('show');
+        // Force reflow to restart animation
+        void accessDeniedOverlay.offsetWidth;
+        accessDeniedOverlay.classList.add('show');
+        
+        setTimeout(() => {
+          accessDeniedOverlay.classList.remove('show');
+        }, 3000);
+      }
+
       function submitPassword() {
         passwordAttempts++;
         const fails = [
-          'ACCESS DENIED: Santa override still active. He left a note: “Nice try, Agent MUNCHKIN!”',
+          'ACCESS DENIED: Santa override still active. He left a note: "Nice try, Agent MUNCHKIN!"',
           'ACCESS DENIED: Christmas magic firewall detected.',
           'ACCESS DENIED: System locked by North Pole Security Team.',
           "ACCESS DENIED: Attempts forwarded to Santa's Nice List Review Board."
@@ -1433,6 +1532,7 @@
         setPasswordMessage(msg, true);
         passwordBuffer = '';
         renderPassword();
+        showAccessDeniedOverlay();
       }
 
       document.querySelectorAll('.key-btn').forEach((btn) => {
@@ -1449,6 +1549,7 @@
           if (key === 'OK') {
             if (!passwordBuffer) {
               setPasswordMessage("No code entered. Even Santa's passwords resist button mashing.", true);
+              showAccessDeniedOverlay();
             } else {
               submitPassword();
             }
