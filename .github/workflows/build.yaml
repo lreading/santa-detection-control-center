@@ -10,6 +10,9 @@ jobs:
     runs-on: arc-runner-set
 
     steps:
+      - name: Debug Docker versions
+        run: docker version || true
+
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
