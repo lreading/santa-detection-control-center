@@ -1,0 +1,35 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: arc-runner-set
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Log in to Private Docker Registry
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login nexus.leoathome.com:5000 -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Extract Build Number
+        id: build_number
+        run: echo "BUILD_NUMBER=${{ github.run_number }}" >> $GITHUB_ENV
+
+      - name: Build Docker Image
+        run: |
+          docker build -t nexus.leoathome.com:5000/santa-trap/tracker:1.0.${{ env.BUILD_NUMBER }} .
+
+      - name: Push Docker Image App
+        run: |
+          docker push nexus.leoathome.com:5000/santa-trap/tracker:1.0.${{ env.BUILD_NUMBER }}
+
+      - name: Logout from Docker Registry
+        run: docker logout nexus.leoathome.com:5000
+
