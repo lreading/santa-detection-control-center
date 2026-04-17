@@ -26,3 +26,4 @@ jobs:
           image_name: ${{ github.repository }}
           image_tag: ${{ github.ref_name }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          extra_args: --tag ghcr.io/${{ github.repository }}:latest

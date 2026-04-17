@@ -12,6 +12,6 @@ You can find where Santa got the best of Agent MUNCHKIN here: https://sdcc.leore
 
 For more context on why I'm trying to track/catch santa, see https://santa-trap.leoreading.com/ 
 
-Image for convenience: `docker run --rm -p 8080:80 ghcr.io/lreading-homelab/santa-detection-control-center:latest`
+Image for convenience: `docker run --rm -p 8080:80 ghcr.io/lreading/santa-detection-control-center:latest`
 
 Use responsibly. Maintain cookie readiness. And remember: Santa may be watching the watchers. Happy holidays, and may your sensors stay calibrated.
