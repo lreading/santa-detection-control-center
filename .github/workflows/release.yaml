@@ -24,6 +24,5 @@ jobs:
         uses: macbre/push-to-ghcr@v17
         with:
           image_name: ${{ github.repository }}
-          image_tag: ${{ github.ref_name }}
+          image_tag: ${{ github.ref_name }}, latest
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          extra_args: --tag ghcr.io/${{ github.repository }}:latest
