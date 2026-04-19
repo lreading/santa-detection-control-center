@@ -21,7 +21,7 @@ jobs:
           fetch-depth: 0
 
       - name: Build and publish Docker image
-        uses: macbre/push-to-ghcr@v16
+        uses: macbre/push-to-ghcr@v17
         with:
           image_name: ${{ github.repository }}
           image_tag: ${{ github.ref_name }}
